@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+  <h1>Random Game Selector</h1>
+
+  <h2>Why not play...</h2>
+  <div id="gameToPlayContainer"></div>
+
+  {% for console in consoles %}
+    <form action="/{{ console['console_endpoint'] }}" id="selectGame">
+      <input type="submit" name="{{ console['console_endpoint'] }}" value="{{ console['name'] }}">
+    </form>
+  {% endfor %}
+
+  <script>
+  function showGame(data) {
+    var $gameToPlayContainer = $('#gameToPlayContainer');
+    $gameToPlayContainer.html('<h3>' + data + '</h3>');
+  }
+
+  $( "#selectGame" ).submit(function(event) {
+    event.preventDefault();
+
+    var $form = $(this),
+      url = $form.attr( "action" );
+
+    var method = "POST";
+
+    $.ajax({
+      method: method,
+      url: url,
+      success: function(data) {
+        showGame(data);
+      },
+    });
+  });
+  </script>
+</body>
